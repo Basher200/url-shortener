@@ -4,12 +4,14 @@ import { PostgresLinkRepository } from "./infrastructure/postgresLinkRepository.
 
 const port = Number(process.env.PORT) || 3000;
 const baseUrl = process.env.BASE_URL ?? `http://localhost:${port}`;
+const logger = process.env.LOG_LEVEL !== "silent";
 
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
 
 const app = buildApp({
   linkRepository: new PostgresLinkRepository(pool),
   baseUrl,
+  logger,
 });
 
 app.addHook("onClose", async () => {
